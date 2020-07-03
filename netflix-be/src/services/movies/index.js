@@ -106,3 +106,24 @@ moviesRouter.put("/:imdbID", async(req, res, next) => {
     }
 })
 
+// 5. DELETE:
+moviesRouter.delete("/:imdbID", async(req, res, next) => {
+    try{
+        const movies = await getMovies()
+        const movieFound = movies.find(movie => movie.imdbID === req.params.imdbID)
+
+        if(!movieFound){
+            const error = new Error ("Movie not Found!")
+            error.httpStatusCode = 404
+            console.log(error)
+            next(error)
+        } else {
+            const filteredMovies = movies.filter(movie => movie.imdbID !== req.params.imdbID)
+            await writeMovies(filteredMovies)
+            res.send("Deleted!")
+        }
+    } catch(error) {
+        console.log(error)
+        next(err)
+    }
+})
