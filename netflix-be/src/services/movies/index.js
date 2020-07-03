@@ -127,3 +127,15 @@ moviesRouter.delete("/:imdbID", async(req, res, next) => {
         next(err)
     }
 })
+// 5. POST Images:
+const downloadPath = path.join(__dirname, "../../img")
+const upload = multer()
+
+moviesRouter.post("/upload", upload.single("file"), (req, res) => {
+    fs.writeFileSync(path.join(downloadPath, req.file.originalname), req.file.buffer)
+    res.send("OK")
+})
+
+
+
+module.exports = moviesRouter
