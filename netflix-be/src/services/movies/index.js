@@ -1,3 +1,14 @@
+const express = require("express")
+const uniqid = require("uniqid")
+const{check, validationResult, sanitizeBody} = require("express-validator")
+const {getMovies, writeMovies} = require("../../lib")
+const multer = require("multer")
+const fs = require("fs-extra")
+const path = require("path")
+
+
+const moviesRouter = express.Router()
+
 // 1. GET all:
 moviesRouter.get("/", async(req, res, next) => {
      try{
@@ -13,6 +24,8 @@ moviesRouter.get("/", async(req, res, next) => {
            next(err)
         }
    })
+
+
 // 2. GET only one:
 moviesRouter.get("/:imdbID", async(req, res, next) => {
     try{
@@ -127,6 +140,8 @@ moviesRouter.delete("/:imdbID", async(req, res, next) => {
         next(err)
     }
 })
+
+
 // 5. POST Images:
 const downloadPath = path.join(__dirname, "../../img")
 const upload = multer()
