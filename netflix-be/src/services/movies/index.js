@@ -73,3 +73,36 @@ moviesRouter.post("/",
         }
    
 })
+
+// 4. PUT
+moviesRouter.put("/:imdbID", async(req, res, next) => {
+    try{
+        const movies = await getMovies()
+
+        const movieFound = movies.find(movie =>movie.imdbID === req.params.imdbID)
+
+        if(moviesRouter) {
+            const position = movies.indexOf(movieFound)
+            const body = req.body
+            delete body.createdAt
+            delete body.imdbID
+            delete body.updatedAt
+
+
+            const updateMovie = {...movieFound,...req.body}
+            movies[position] = updateMovie
+            await writeMovies(movies)
+            res.send(updateMovie)
+        } else {
+            const err = new Error ()
+            err.httpStatusCode = 404
+            next(err)
+
+        }
+    } catch (error){
+        console.log(error)
+        const err = new Error("Generic error!")
+        next(err)
+    }
+})
+
